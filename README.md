@@ -4,6 +4,6 @@
 
 *Source code coming soon...*
 
-- [Download](https://robin-language.org/download/robin.zip)    
+- [Download](https://robin-language.org/download/robin-setup.exe)    
 - [Getting Started](https://robin-language.org/docs/quickstart-tutorial-first-steps-in-robin)    
 - [Documentation](https://robin-language.org/docs)    
