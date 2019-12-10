@@ -1,0 +1,47 @@
+set TextVar_1 to 'ABC'
+set TextVar_2 to 'DEF'
+
+if TextVar_1 ='ABC' AND TextVar_2='DEF' then
+
+    Display.ShowMessage Title:'TEST' \
+                        Message:'The first condition is true: TextVar_1 = '+TextVar_1+' and TextVar_2 = '+TextVar_2 \
+                        Icon:Display.Icon.None \
+                        Buttons:Display.Buttons.OK \
+                        DefaultButton:Display.DefaultButton.Button1 \
+                        IsTopMost:False \
+                        ButtonPressed=> ButtonPressed
+else
+
+    Display.ShowMessage Title:'TEST' \
+                        Message:'The first condition is false: TextVar_1 = '+TextVar_1+' and TextVar_2 = '+TextVar_2 \
+                        Icon:Display.Icon.None \
+                        Buttons:Display.Buttons.OK \
+                        DefaultButton:Display.DefaultButton.Button1 \
+                        IsTopMost:False \
+                        ButtonPressed=> ButtonPressed
+end
+
+
+set TextVar to 'ABC'
+
+if TextVar = 'ABC' OR TextVar = 'DEF' then
+
+    Display.ShowMessage Title:'TEST' \
+                        Message:'The second condition is true: TextVar = '+TextVar \
+                        Icon:Display.Icon.None \
+                        Buttons:Display.Buttons.OK \
+                        DefaultButton:Display.DefaultButton.Button1 \
+                        IsTopMost:False \
+                        ButtonPressed=> ButtonPressed
+
+else
+
+    Display.ShowMessage Title:'TEST' \
+                        Message:'The second condition is false: TextVar = '+TextVar \
+                        Icon:Display.Icon.None \
+                        Buttons:Display.Buttons.OK \
+                        DefaultButton:Display.DefaultButton.Button1 \
+                        IsTopMost:False \
+                        ButtonPressed=> ButtonPressed
+
+end

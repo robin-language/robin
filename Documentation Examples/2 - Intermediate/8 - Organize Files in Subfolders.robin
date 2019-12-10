@@ -1,0 +1,39 @@
+Display.SelectFolder Description:'Select a folder that contains the files' \
+                    InitialDirectory:'' \
+                    IsTopMost:False \
+                    SelectedFolder=> SelectedFolder \
+                    ButtonPressed=> ButtonPressed
+
+if ButtonPressed='OK' then 
+
+    Folder.GetFiles Folder:SelectedFolder  \
+                    FileFilter:'*' \
+                    IncludeSubfolders:False \
+                    FailOnAccessDenied:True \
+                    SortBy1:Folder.SortBy.NoSort \
+                    SortDescending1:False \
+                    SortBy2:Folder.SortBy.NoSort \
+                    SortDescending2:False \
+                    SortBy3:Folder.SortBy.NoSort \
+                    SortDescending3:False \
+                    Files=> Files
+
+    loop foreach item in Files
+
+        Folder.Create FolderPath:SelectedFolder  \
+                    FolderName:item.CreationTime.Year+'\\'+item.CreationTime.Month  \
+                    Folder=> DestinationFolder
+
+        File.Copy Files:item  Destination:DestinationFolder  IfFileExists:File.IfExists.DoNothing CopiedFiles=> CopiedFiles
+
+    end
+
+end
+
+Display.ShowMessage Title:'Process Completed!' \
+                    Message:'Process "Organize Files in Subfolders" completed.' \
+                    Icon:Display.Icon.None \
+                    Buttons:Display.Buttons.OK \
+                    DefaultButton:Display.DefaultButton.Button1 \
+                    IsTopMost:False \
+                    ButtonPressed=> ButtonPressed

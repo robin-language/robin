@@ -1,0 +1,25 @@
+Display.InputDialog Title:'Factorial' \
+                    Message:'Number for factorial' \
+                    DefaultValue:'' \
+                    InputType:Display.InputType.SingleLine \
+                    IsTopMost:False \
+                    UserInput=> UserInput \
+                    ButtonPressed=> ButtonPressed
+
+System.RunVBScript VBScriptCode:'''Dim n,f 
+                                n='''+UserInput+'''
+                                f=1 
+                                For i=1 to n 
+                                f=f*i 
+                                Next 
+                                Wscript.Echo f''' \
+                    ScriptError=> ScriptError \
+                    ScriptOutput=> VBScriptOutput
+
+Display.ShowMessage Title:'Result' \
+                    Message:'Fact('+UserInput+')= '+VBScriptOutput \
+                    Icon:Display.Icon.Information \
+                    Buttons:Display.Buttons.OK \
+                    DefaultButton:Display.DefaultButton.Button1 \
+                    IsTopMost:True \
+                    ButtonPressed=> ButtonPressed2

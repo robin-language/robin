@@ -1,0 +1,67 @@
+function DownloadWebPageText
+
+    Web.Download Url:WebsiteSelected  \
+                ConnectionTimeout:30 \
+                FollowRedirection:True \
+                ClearCookies:False \
+                UserAgent:'Mozilla/5.0 (Windows; U; Windows NT 5.1; en-US; rv:1.8.1.21) Gecko/20100312 Firefox/3.6' \
+                Encoding:'' \
+                WebPageText=> g:WebsiteText
+
+end
+
+function ParseEmails
+
+    Text.RegexParse Text:WebsiteText  \
+                TextToFind:'([a-zA-Z0-9_\-\.]+)@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.)|(([a-zA-Z0-9\-]+\.)+))([a-zA-Z]{2,4}|[0-9]{1,3})'  \
+                StartingPosition:0  \
+                IgnoreCase:False \
+                OccurrencePositions=> OccurrencePositions \
+                Matches=> g:EmailsFound
+
+end
+
+function WriteParsedEmails
+
+    File.GetTempPath TempFile=> g:TempFile
+
+    loop foreach item in EmailsFound
+        File.WriteText File:TempFile  \
+                TextToWrite:item  \
+                AppendNewLine:True \
+                IfFileExists:File.IfFileExists.Append \
+                Encoding:File.FileEncoding.Unicode
+
+    end
+
+end
+
+Display.InputDialog Title:'Enter the URL' \
+                Message:'Please enter the URL of the website whose emails you want to retrieve without the preceeding http:// (e.g www.google.com)' \
+                DefaultValue:'' \
+                InputType:Display.InputType.SingleLine \
+                IsTopMost:False \
+                UserInput=> WebsiteSelected \
+                ButtonPressed=> ButtonPressed
+
+if ButtonPressed='OK' then
+
+    call DownloadWebPageText
+    call ParseEmails
+    call WriteParsedEmails
+
+    System.RunApplication ApplicationPath:'notepad'  \
+                CommandLineArguments:TempFile \
+                WorkingDirectory:'' \
+                WindowStyle:System.ProcessWindowStyle.Normal \
+                ProcessId=> AppProcessId
+
+end
+
+Display.ShowMessage Title:'Process Completed!' \
+                Message:'Process "Extract Emails from a Web Page" completed.' \
+                Icon:Display.Icon.None \
+                Buttons:Display.Buttons.OK \
+                DefaultButton:Display.DefaultButton.Button1 \
+                IsTopMost:False \
+                ButtonPressed=> ButtonPressed

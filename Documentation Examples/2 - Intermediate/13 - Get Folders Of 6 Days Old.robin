@@ -1,0 +1,49 @@
+Folder.GetSpecialFolder SpecialFolder:Folder.SpecialFolder.DesktopDirectory \
+                        SpecialFolderPath=> Desktop
+
+Display.SelectFolder Description:'Select the parent folder, whose subfolders you wish to check:' \
+                    InitialDirectory:Desktop \
+                    IsTopMost:False \
+                    SelectedFolder=> SelectedFolder \
+                    ButtonPressed=> ButtonPressed2
+
+set Olderthan6days to []
+
+DateTime.Current DateTimeFormat:DateTime.DateTimeFormat.DateAndTime \
+Offset:'0' \
+CurrentDateTime=> Now
+
+Folder.GetSubfolders Folder: SelectedFolder  \
+                    FolderFilter:'*' \
+                    IncludeSubfolders:False \
+                    FailOnAccessDenied:True \
+                    SortBy1:Folder.SortBy.NoSort \
+                    SortDescending1:False \
+                    SortBy2:Folder.SortBy.NoSort \
+                    SortDescending2:False \
+                    SortBy3:Folder.SortBy.NoSort \
+                    SortDescending3:False \
+                    Subfolders=> Folders
+
+loop foreach item in Folders
+
+    DateTime.Subtract FromDate:Now  \
+                    SubstractDate:item.CreationTime  \
+                    TimeUnit:DateTime.DifferenceTimeUnit.Days \
+                    TimeDifference=> TimeDifference
+
+    if TimeDifference >= 90 then
+
+        set Olderthan6days to Olderthan6days+item.name
+
+    end
+
+end
+
+Display.ShowMessage Title:'The folders which are 6 days old and more are:' \
+                    Message:Olderthan6days \
+                    Icon:Display.Icon.None \
+                    Buttons:Display.Buttons.OK \
+                    DefaultButton:Display.DefaultButton.Button1 \
+                    IsTopMost:False \
+                    ButtonPressed=> ButtonPressed

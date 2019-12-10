@@ -1,0 +1,64 @@
+function button_pressed
+
+    if ButtonPressed='Cancel' then
+
+        exit 
+
+    end
+
+end
+
+
+function get_folder_size 
+
+    set FolderSize to 0
+
+    Folder.GetFiles Folder:SelectedFolder  \
+                    FileFilter:'*' \
+                    IncludeSubfolders:True \
+                    FailOnAccessDenied:True \
+                    SortBy1:Folder.SortBy.NoSort \
+                    SortDescending1:False \
+                    SortBy2:Folder.SortBy.NoSort \
+                    SortDescending2:False \
+                    SortBy3:Folder.SortBy.NoSort \
+                    SortDescending3:False \
+                    Files=> g:AllFilesInFolder
+  
+    loop foreach item in AllFilesInFolder
+
+        set FolderSize to FolderSize + item.Size
+
+    end
+
+    set FolderSizeInMB to (FolderSize/1048576)
+
+    Text.FromNumber Number: FolderSize  \
+                    DecimalPlaces:0 \
+                    UseThousandsSeparator:True \
+                    FormattedNumber=> g:FormattedFolderSize
+
+    Text.FromNumber Number: FolderSizeInMB  \
+                    DecimalPlaces:3 \
+                    UseThousandsSeparator:True \
+                    FormattedNumber=> g:FormattedFolderSizeInMB
+
+end
+
+Display.SelectFolder Description:'' \
+                    InitialDirectory:'' \
+                    IsTopMost:False \
+                    SelectedFolder=> SelectedFolder \
+                    ButtonPressed=> ButtonPressed
+
+call button_pressed
+
+call get_folder_size
+
+Display.ShowMessage Title:'Folder Size Results' \
+                    Message:'The folder:'+SelectedFolder+' and its subfolders contain '+AllFilesInFolder.Count+' files with a total size of: '+FormattedFolderSize+' bytes or: '+FormattedFolderSizeInMB+' MB' \
+                    Icon:Display.Icon.None \
+                    Buttons:Display.Buttons.OK \
+                    DefaultButton:Display.DefaultButton.Button1 \
+                    IsTopMost:True \
+                    ButtonPressed=> ButtonPressed

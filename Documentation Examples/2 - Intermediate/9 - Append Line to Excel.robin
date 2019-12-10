@@ -1,0 +1,39 @@
+Display.SelectFile Title:'Please select the Excel file that you want to edit.' \
+                InitialDirectory:'' \
+                FileFilter:'*.xls;*.xlsx' \
+                IsTopMost:False \
+                CheckIfFileExists:true \
+                SelectedFile=> SelectedExcelFile \
+                ButtonPressed=> ButtonPressed
+
+if ButtonPressed='Open' then
+
+    Excel.LaunchAndOpen Path:SelectedExcelFile  \
+                        Visible:True \
+                        Password:'' \
+                        ReadOnly:False \
+                        LoadAddInsAndMacros:False \
+                        Instance=> ExcelInstance
+        
+    Excel.GetFirstFreeColumnRow Instance:ExcelInstance  \
+                                FirstFreeColumn=> FirstFreeColumn \
+                                FirstFreeRow=> FirstFreeRow
+       
+    Excel.WriteCell Instance:ExcelInstance  \
+                    Value:'This text has been added by Robin!'  \
+                    Column:FirstFreeColumn  \
+                    Row: FirstFreeRow
+        
+    Excel.Save Instance: ExcelInstance
+        
+    Excel.Close Instance: ExcelInstance
+
+end
+
+Display.ShowMessage Title:'Process Completed!' \
+                    Message:'Process "Append Line to Excel" completed.' \
+                    Icon:Display.Icon.None \
+                    Buttons:Display.Buttons.OK \
+                    DefaultButton:Display.DefaultButton.Button1 \
+                    IsTopMost:False \
+                    ButtonPressed=> ButtonPressed

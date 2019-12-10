@@ -1,0 +1,28 @@
+Display.SelectFile Title:'Please select the file to copy' \
+                InitialDirectory:'' \
+                FileFilter:'' \
+                IsTopMost:False \
+                CheckIfFileExists:false \
+                SelectedFile=> FileToCopy \
+                ButtonPressed=> ButtonPressedInFileDialog
+
+Display.SelectFolder Description:'Select the destination directory' \
+                    InitialDirectory:'' \
+                    IsTopMost:False \
+                    SelectedFolder=> DestinationDirectory \
+                    ButtonPressed=> ButtonPressedInFolderDialog
+
+if ButtonPressedInFileDialog = 'Open' and ButtonPressedInFolderDialog = 'OK' then
+    File.Copy Files: FileToCopy  \
+            Destination: DestinationDirectory  \
+            IfFileExists:File.IfExists.DoNothing \
+            CopiedFiles=> CopiedFiles
+end
+
+Display.ShowMessage Title:'Process Completed!' \
+                    Message:'"Copy File" completed.' \
+                    Icon:Display.Icon.None \
+                    Buttons:Display.Buttons.OK \
+                    DefaultButton:Display.DefaultButton.Button1 \
+                    IsTopMost:False \
+                    ButtonPressed=> ButtonPressed

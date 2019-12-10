@@ -1,0 +1,55 @@
+function DaysOfMonth
+
+    set g:Last to 0
+
+    if Today.month=1 or Today.month = 3 or Today.month = 5 or Today.month = 7 or Today.month = 8 or Today.month = 10 or Today.month = 12 then
+
+        set g:Last to 31
+
+    else if Today.month = 2 then
+
+        set g:Last to 28
+
+        if Today.Year = 2016 or Today.Year =2020 or Today.Year = 2024 or Today.Year =2028 then
+
+            set g:Last to 29
+
+        end
+
+    else 
+
+            set g:Last to 30
+
+    end
+
+end
+
+DateTime.Current DateTimeFormat:DateTime.DateTimeFormat.DateAndTime \
+                Offset:'0' \
+                CurrentDateTime=> g:Today
+
+DateTime.Add DateTime: Today \
+            TimeToAdd:-(Today.day-1)  \
+            TimeUnit:DateTime.TimeUnit.Days \
+            ResultedDate=> FirstDayOfCurrentMonth
+
+Console.Write Message: Today.month
+
+call DaysOfMonth
+
+DateTime.Add DateTime: Today  \
+            TimeToAdd: Last-Today.day  \
+            TimeUnit:DateTime.TimeUnit.Days \
+            ResultedDate=> LastDayOfCurrentMonth
+
+Text.FromCustomDateTime DateTime:Today  \
+                        CustomFormat:'MMMM'  \
+                        Result=> TodaysMonth
+
+Display.ShowMessage Title:'Current Month Info' \
+                    Message:'The first day of this month was: '+FirstDayOfCurrentMonth.DayOfWeek+'. The last day of this month will be: '+LastDayOfCurrentMonth.DayOfWeek+'. The current month is '+TodaysMonth+' and has '+Last+' days. :-)' \
+                    Icon:Display.Icon.None \
+                    Buttons:Display.Buttons.OK \
+                    DefaultButton:Display.DefaultButton.Button1 \
+                    IsTopMost:true \
+                    ButtonPressed=> ButtonPressed

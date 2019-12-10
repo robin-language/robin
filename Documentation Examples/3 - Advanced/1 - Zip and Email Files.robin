@@ -1,0 +1,44 @@
+Display.SelectFile Title:'Please select the file(s) that you want to zip and email.' \
+InitialDirectory:'' \
+FileFilter:'' \
+IsTopMost:False \
+CheckIfFileExists:True \
+SelectedFile=> FilesToZipAndMail \
+ButtonPressed=> ButtonPressed
+
+if ButtonPressed='Open' then
+   
+Folder.GetSpecialFolder SpecialFolder:Folder.SpecialFolder.DesktopDirectory \
+                        SpecialFolderPath=> DesktopDirectory
+
+Compression.ZipFiles ArchivePath:DesktopDirectory+'\FilesToBeEmailed.zip' \
+                    FilesToZip:FilesToZipAndMail  \
+                    CompressionLevel:Compression.CompressionLevel.Normal \
+                    Password:'' \
+                    ArchiveComment:'' \
+                    ZipFile=> GeneratedZipFile
+
+Email.Send SMTPServer:'smtp.example.com'  \
+            Port:25 \
+            EnableSSL:False \
+            SendFrom:'sender@example.com'  \
+            SenderDisplayName:"Sender's Name" \
+            SendTo:'recipient@example.com' \
+            CC:'' \
+            BCC:'' \
+            Subject:'Zipped Files' \
+            Body:'You can find the compressed files attached.' \
+            IsBodyHtml:False \
+            Attachments:GeneratedZipFile
+
+File.Delete Files: GeneratedZipFile
+
+end
+
+Display.ShowMessage Title:'Process Completed!' \
+                    Message:'Process "Zip and Email Files" completed.' \
+                    Icon:Display.Icon.None \
+                    Buttons:Display.Buttons.OK \
+                    DefaultButton:Display.DefaultButton.Button1 \
+                    IsTopMost:False \
+                    ButtonPressed=> ButtonPressed

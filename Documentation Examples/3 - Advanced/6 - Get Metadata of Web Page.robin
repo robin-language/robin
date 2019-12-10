@@ -1,0 +1,128 @@
+Display.InputDialog Title:'Enter URL' \
+                    Message:'Please enter a URL for the web page that you want to examine:' \
+                    DefaultValue:'' \
+                    InputType:Display.InputType.SingleLine \
+                    IsTopMost:False \
+                    UserInput=> UserInput \
+                    ButtonPressed=> ButtonPressed
+
+if ButtonPressed <> 'Cancel' then
+
+        
+        WebAutomation.LaunchChrome  Url: UserInput  \
+                                    WindowState:WebAutomation.BrowserWindowState.Normal \
+                                    ClearCache:False \
+                                    ClearCookies:False \
+                                    BrowserInstance=> Chrome
+
+        call title
+        call keywords
+        call description
+        call html_source
+
+        WebAutomation.CloseWebBrowser BrowserInstance: Chrome
+
+end
+
+function title
+
+    WebAutomation.DataExtraction.GetDetailsOfWebPage BrowserInstance:Chrome  \
+                        DetailsType:WebAutomation.DetailsType.Title \
+                        Details=> WebPageTitle
+    Display.ShowMessage Title:'Get Details of Web Page' \
+                        Message:'The title of the Web Page is '+WebPageTitle Icon:Display.Icon.None \
+                        Buttons:Display.Buttons.OK \
+                        DefaultButton:Display.DefaultButton.Button1 \
+                        IsTopMost:False \
+                        ButtonPressed=> ButtonPressed
+end
+
+function keywords
+    WebAutomation.DataExtraction.GetDetailsOfWebPage BrowserInstance: Chrome  \
+                        DetailsType:WebAutomation.DetailsType.MetaKeywords \
+                        Details=> WebPageKeywords
+
+    file.GetTempPath TempFile=> TempFile
+    File.WriteText File: TempFile  \
+                        TextToWrite: WebPageKeywords  \
+                        AppendNewLine:True \
+                        IfFileExists:File.IfFileExists.Overwrite \
+                        Encoding:File.FileEncoding.Unicode
+    if (not TempFile.IsEmpty) then
+        Display.ShowMessage Title:'Get Details of Web Page' \
+                            Message:'The keywords specified for this Web Page are: '+WebPageKeywords \
+                            Icon:Display.Icon.None \
+                            Buttons:Display.Buttons.OK \
+                            DefaultButton:Display.DefaultButton.Button1 \
+                            IsTopMost:False \
+                            ButtonPressed=> ButtonPressed
+        else
+        Display.ShowMessage Title:'Get Details of Web Page' \
+                            Message:'No keywords specified for this Web Page.' \
+                            Icon:Display.Icon.None \
+                            Buttons:Display.Buttons.OK \
+                            DefaultButton:Display.DefaultButton.Button1 \
+                            IsTopMost:False \
+                            ButtonPressed=> ButtonPressed
+    end
+end
+
+function description
+    WebAutomation.DataExtraction.GetDetailsOfWebPage BrowserInstance: Chrome  \
+                        DetailsType:WebAutomation.DetailsType.Description \
+                        Details=> WebPageDescription
+    file.GetTempPath TempFile=> TempFile
+    file.WriteText File:TempFile  \
+                        TextToWrite:WebPageDescription  \
+                        AppendNewLine:True \
+                        IfFileExists:File.IfFileExists.Overwrite \
+                        Encoding:File.FileEncoding.Unicode
+
+    if (not TempFile.IsEmpty) then
+            Display.ShowMessage Title:'Get Details of Web Page' \
+                                Message:'The description for this Web Page is: '+WebPageDescription Icon:Display.Icon.None \
+                                Buttons:Display.Buttons.OK \
+                                DefaultButton:Display.DefaultButton.Button1 \
+                                IsTopMost:False \
+                                ButtonPressed=> ButtonPressed
+            else
+            Display.ShowMessage Title:'Get Details of Web Page' \
+                                Message:'No description specified for this Web Page.' \
+                                Icon:Display.Icon.None \
+                                Buttons:Display.Buttons.OK \
+                                DefaultButton:Display.DefaultButton.Button1 \
+                                IsTopMost:False \
+                                ButtonPressed=> ButtonPressed
+     end
+
+end
+
+function html_source
+    Display.ShowMessage Title:'' \
+                        Message:'Do you want to save the HTML source of the Web Page to disk?' \
+                        Icon:Display.Icon.Question \
+                        Buttons:Display.Buttons.YesNo \
+                        DefaultButton:Display.DefaultButton.Button1 \
+                        IsTopMost:False \
+                        ButtonPressed=> ButtonPressed2
+    if ButtonPressed2='Yes' then
+        Display.SelectFile Title:'Save HTML source into:' \
+                        InitialDirectory:'' \
+                        FileFilter:'' \
+                        IsTopMost:False \
+                        CheckIfFileExists:False \
+                        SelectedFile=> SelectedFile \
+                        ButtonPressed=> ButtonPressed3
+        if ButtonPressed3<>'Cancel' then
+            WebAutomation.DataExtraction.GetDetailsOfWebPage BrowserInstance:Chrome  \
+                            DetailsType:WebAutomation.DetailsType.Source \
+                            Details=> Source
+
+            File.WriteText File:SelectedFile  \
+                            TextToWrite:Source  \
+                            AppendNewLine:True \
+                            IfFileExists:File.IfFileExists.Overwrite \
+                            Encoding:File.FileEncoding.Unicode
+        end
+    end
+end

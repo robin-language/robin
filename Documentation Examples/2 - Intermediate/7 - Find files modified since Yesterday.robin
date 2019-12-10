@@ -1,0 +1,59 @@
+Display.SelectFolder Description:'Please select a folder to search for files that were modified since yesterday.' \
+                    InitialDirectory:'' \
+                    IsTopMost:False \
+                    SelectedFolder=> SelectedFolder \
+                    ButtonPressed=> ButtonPressed
+
+if ButtonPressed='OK' then
+
+    DateTime.Current DateTimeFormat:DateTime.DateTimeFormat.DateOnly \
+                        Offset:'0' \
+                        CurrentDateTime=> CurrentDate
+
+    DateTime.Add DateTime:CurrentDate  \
+                        TimeToAdd:-1  \
+                        TimeUnit:DateTime.TimeUnit.Seconds \
+                        ResultedDate=> YesterdaysDate
+
+    File.GetTempPath TempFile=> TempFile
+
+    Folder.GetFiles Folder:SelectedFolder  \
+                        FileFilter:'*' \
+                        IncludeSubfolders:True \
+                        FailOnAccessDenied:True \
+                        SortBy1:Folder.SortBy.NoSort \
+                        SortDescending1:False \
+                        SortBy2:Folder.SortBy.NoSort \
+                        SortDescending2:False \
+                        SortBy3:Folder.SortBy.NoSort \
+                        SortDescending3:False \
+                        Files=> AllFilesInFolder
+
+    loop foreach item in AllFilesInFolder
+
+        if item.LastModified >= YesterdaysDate then
+
+            File.WriteText File: TempFile  \
+                        TextToWrite: item+' modified on '+item.LastModified  \
+                        AppendNewLine:True \
+                        IfFileExists:File.IfFileExists.Append \
+                        Encoding:File.FileEncoding.Unicode
+
+        end
+
+    end
+
+    System.RunApplication ApplicationPath:'notepad'  \
+                        CommandLineArguments:TempFile \
+                        WorkingDirectory:'' \
+                        WindowStyle:System.ProcessWindowStyle.Normal \
+                        ProcessId=> ProcessId
+
+end
+
+Display.ShowMessage Title:'Process Completed!' \
+                    Message:'Example "Find Files Modified since Yesterday" completed.' \
+                    Icon:Display.Icon.None \
+                    Buttons:Display.Buttons.OK \
+                    DefaultButton:Display.DefaultButton.Button1 \
+                    IsTopMost:False ButtonPressed=> ButtonPressed

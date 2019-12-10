@@ -1,0 +1,15 @@
+DateTime.Current DateTimeFormat:DateTime.DateTimeFormat.DateAndTime \
+                        Offset:'0' \
+                        CurrentDateTime=> CurrentDateTime
+
+Text.FromDateTime DateTime: CurrentDateTime  \
+                StandardFormat:Text.WellKnownDateTimeFormat.ShortDate \
+                Result=> FormattedDateTime
+
+Display.ShowMessage Title:'' \
+                    Message:'The time right now is '+FormattedDateTime \
+                    Icon:Display.Icon.Information \
+                    Buttons:Display.Buttons.OK \
+                    DefaultButton:Display.DefaultButton.Button1 \
+                    IsTopMost:False \
+                    ButtonPressed=> ButtonPressed

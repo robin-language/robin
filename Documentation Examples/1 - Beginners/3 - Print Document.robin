@@ -1,0 +1,18 @@
+Display.SelectFile Title:'Please select the file that you want to print' \
+                InitialDirectory:'' \
+                FileFilter:'*.txt' \
+                IsTopMost:False \
+                CheckIfFileExists:True \
+                SelectedFile=> FileToPrint \
+                ButtonPressed=> ButtonPressed
+
+if ButtonPressed='Open' then
+    System.PrintDocument DocumentPath: FileToPrint
+end
+
+Display.ShowMessage Title:'Process completed!' \
+                    Message:'Process "Print Document" completed.' \
+                    Icon:Display.Icon.None Buttons:Display.Buttons.OK \
+                    DefaultButton:Display.DefaultButton.Button1 \
+                    IsTopMost:False \
+                    ButtonPressed=> ButtonPressed

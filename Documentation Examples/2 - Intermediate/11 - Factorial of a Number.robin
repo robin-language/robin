@@ -1,0 +1,27 @@
+Display.InputDialog Title:'Factorial' \
+                    Message:'Number for factorial' \
+                    DefaultValue:1 \
+                    InputType:Display.InputType.SingleLine \
+                    IsTopMost:False \
+                    UserInput=> UserInput \
+                    ButtonPressed=> ButtonPressed
+
+if ButtonPressed = 'OK' then
+    Text.ToNumber Text:UserInput  \
+                  Number=> TextAsNumber
+
+    set loopIndex to 1
+    set mul to 1
+
+    loop while (loopIndex<=TextAsNumber) = true
+        set mul to mul*loopIndex
+        set loopIndex to loopIndex+1
+    end
+
+    Display.ShowMessage Title:'Result' \
+                    Message:'Fact('+UserInput+')= '+mul Icon:Display.Icon.None \
+                    Buttons:Display.Buttons.OK \
+                    DefaultButton:Display.DefaultButton.Button1 \
+                    IsTopMost:False \
+                    ButtonPressed=> ButtonPressed
+end

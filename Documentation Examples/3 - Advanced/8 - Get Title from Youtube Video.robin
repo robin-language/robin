@@ -1,0 +1,37 @@
+import ".\BrowserMaskFile.appmask"
+
+Display.InputDialog Title:'Example' \
+                    Message:'Please, enter the YouTube Url' \
+                    DefaultValue:'' \
+                    InputType:Display.InputType.SingleLine \
+                    IsTopMost:False \
+                    UserInput=> YouTubeUrl \
+                    ButtonPressed=> ButtonPressed
+
+if ButtonPressed='OK' then
+
+
+    WebAutomation.LaunchChrome  Url: YouTubeUrl  \
+                                WindowState:WebAutomation.BrowserWindowState.Normal \
+                                ClearCache:False \
+                                ClearCookies:False \
+                                BrowserInstance=> Chrome
+
+    WebAutomation.DataExtraction.GetDetailsOfElement    BrowserInstance: Chrome \
+                                                        Control:BrowserMaskFile.YouTube.Title \
+                                                        AttributeName:'Title'  \
+                                                        AttributeValue=> Title
+
+    Display.ShowMessage Title:'The title of the Youtube video is: ' \
+                        Message:Title \
+                        Icon:Display.Icon.None \
+                        Buttons:Display.Buttons.OK \
+                        DefaultButton:Display.DefaultButton.Button1 \
+                        IsTopMost:False \
+                        ButtonPressed=> ButtonPressed
+else
+
+    exit
+
+end
+

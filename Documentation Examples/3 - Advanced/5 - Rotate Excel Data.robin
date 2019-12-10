@@ -1,0 +1,80 @@
+function FileSelection
+
+    Display.SelectFile Title:'Please select the Excel file' \
+                    InitialDirectory:'' \
+                    FileFilter:'*.xls*' \
+                    IsTopMost:False \
+                    CheckIfFileExists:True \
+                    SelectedFile=> g:SelectedExcelFile \
+                    ButtonPressed=> ButtonPressed
+
+Display.SelectFile Title:'' InitialDirectory:'' FileFilter:'' IsTopMost:False CheckIfFileExists:False SelectedFile=> SelectedFile ButtonPressed=> ButtonPressed
+
+    if ButtonPressed='Cancel' then 
+
+        exit
+
+    end
+
+end
+
+function ExcelLaunchRead
+
+    Excel.LaunchAndOpen Path:SelectedExcelFile  \
+                    Visible:True \
+                    Password:'' \
+                    ReadOnly:False \
+                    LoadAddInsAndMacros:False \
+                    Instance=> g:ExcelInstance
+
+    Excel.GetFirstFreeColumnRow Instance:ExcelInstance  \
+                    FirstFreeColumn=> g:FirstFreeColumn \
+                    FirstFreeRow=> g:FirstFreeRow
+    
+    Excel.ReadCells Instance: ExcelInstance  \
+                    StartColumn:1  \
+                    StartRow:1  \
+                    EndColumn:FirstFreeColumn-1  \
+                    EndRow:FirstFreeRow-1  \
+                    ReadAsText:False \
+                    FirstLineIsHeader:False \
+                    Value=> g:ExcelDataTable
+
+    Excel.AddWorksheet Instance: ExcelInstance  \
+                    Name: 'Rotated Data'  \
+                    WorksheetPosition:Excel.WorksheetPosition.First
+
+    Excel.ActivateWorksheetByName Instance: ExcelInstance \
+                    Name: 'Rotated Data'
+
+end
+
+function RotateLoop
+
+    loop i from 1 to FirstFreeRow-1 step 1
+
+        loop j from 1 to FirstFreeColumn-1 step 1
+
+            Excel.WriteCell Instance: ExcelInstance \
+                            Value: ExcelDataTable[i-1][j-1]  \
+                            Column:i  \
+                            Row: j
+
+        end
+
+    end
+
+end
+
+Call FileSelection
+Call ExcelLaunchRead
+Call RotateLoop
+
+Display.ShowMessage Title:'Process Completed!' \
+                    Message:'Process "Rotate Excel Data" completed.' \
+                    Icon:Display.Icon.None \
+                    Buttons:Display.Buttons.OK \
+                    DefaultButton:Display.DefaultButton.Button1 \
+                    IsTopMost:True \
+                    ButtonPressed=> ButtonPressed
+

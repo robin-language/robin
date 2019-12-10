@@ -1,0 +1,33 @@
+
+Display.SelectFolder Description:'Please select the root folder that contains the text files to delete. Press Cancel to exit.' \
+                    InitialDirectory:'' \
+                    IsTopMost:False \
+                    SelectedFolder=> RootFolder \
+                    ButtonPressed=> ButtonPressed
+
+
+if ButtonPressed='OK' then
+
+    Folder.GetFiles Folder:RootFolder  \
+                    FileFilter:'*.txt' \
+                    IncludeSubfolders:True \
+                    FailOnAccessDenied:True \
+                    SortBy1:Folder.SortBy.NoSort \
+                    SortDescending1:False \
+                    SortBy2:Folder.SortBy.NoSort \
+                    SortDescending2:False \
+                    SortBy3:Folder.SortBy.NoSort \
+                    SortDescending3:False \
+                    Files=> TextFiles
+
+    File.Delete Files: TextFiles
+
+end
+
+Display.ShowMessage Title:'Process Completed!' \
+                    Message:'Process "Delete All Text Files in a Folder Hierarchy" completed.' \
+                    Icon:Display.Icon.None \
+                    Buttons:Display.Buttons.OK \
+                    DefaultButton:Display.DefaultButton.Button1 \
+                    IsTopMost:False \
+                    ButtonPressed=> ButtonPressed

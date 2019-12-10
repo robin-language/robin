@@ -1,0 +1,17 @@
+Folder.GetSpecialFolder SpecialFolder:Folder.SpecialFolder.DesktopDirectory \
+                        SpecialFolderPath=> DesktopDirectoryPath
+
+Clipboard.GetText Text=> ClipboardText
+
+File.WriteText File: DesktopDirectoryPath+'\PastedContents.txt' \
+            TextToWrite: ClipboardText  \
+            AppendNewLine:True \
+            IfFileExists:File.IfFileExists.Append \
+            Encoding:File.FileEncoding.Unicode
+
+Display.ShowMessage Title:'Process Completed!' \
+                    Message:'Process "Paste to Text File" completed.' \
+                    Icon:Display.Icon.None Buttons:Display.Buttons.OK \
+                    DefaultButton:Display.DefaultButton.Button1 \
+                    IsTopMost:False \
+                    ButtonPressed=> ButtonPressed

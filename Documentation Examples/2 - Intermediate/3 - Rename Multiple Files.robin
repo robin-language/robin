@@ -1,0 +1,41 @@
+Display.SelectFolder Description:'Please select the folder whose files will be renamed. Press Cancel to exit.' \
+                    InitialDirectory:'' \
+                    IsTopMost:False \
+                    SelectedFolder=> SelectedFolder \
+                    ButtonPressed=> ButtonPressed
+
+if ButtonPressed='OK' then
+
+    Folder.GetFiles Folder: SelectedFolder  \
+                    FileFilter:'*' \
+                    IncludeSubfolders:False \
+                    FailOnAccessDenied:True \
+                    SortBy1:Folder.SortBy.NoSort \
+                    SortDescending1:False \
+                    SortBy2:Folder.SortBy.NoSort \
+                    SortDescending2:False \
+                    SortBy3:Folder.SortBy.NoSort \
+                    SortDescending3:False \
+                    Files=> FilesToBeRenamed
+
+    DateTime.Current DateTimeFormat:DateTime.DateTimeFormat.DateAndTime \
+                    Offset:'0' \
+                    CurrentDateTime=> CurrentDateTime
+
+    File.RenameAddDateOrTime Files: FilesToBeRenamed   \
+                    DateTimeToAdd:File.DateTimeToAdd.Current \
+                    DateTimePosition:File.AddTextPosition.AfterName \
+                    DateTimeSeparator:File.Separator.Space \
+                    DateTimeFormat:'yyyy-MM-dd' \
+                    IfFileExists:File.IfExists.DoNothing \
+                    RenamedFiles=> RenamedFiles
+
+end
+
+Display.ShowMessage Title:'Process Completed!' \
+                    Message:'Process "Rename Multiple Files" completed.' \
+                    Icon:Display.Icon.None \
+                    Buttons:Display.Buttons.OK \
+                    DefaultButton:Display.DefaultButton.Button1 \
+                    IsTopMost:False \
+                    ButtonPressed=> ButtonPressed

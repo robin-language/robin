@@ -1,0 +1,74 @@
+Display.SelectFolder Description:'Please select the folder whose files you want to search.' \
+                    InitialDirectory:'' \
+                    IsTopMost:False \
+                    SelectedFolder=> SelectedFolder \
+                    ButtonPressed=> ButtonPressed
+
+label PromptForText
+
+Display.InputDialog Title:'Please enter the text to search for.' \
+                    Message:'Enter the text that you want to locate in the files.' \
+                    DefaultValue:'' \
+                    InputType:Display.InputType.SingleLine \
+                    IsTopMost:False \
+                    UserInput=> TextToLocate \
+                    ButtonPressed=> ButtonPressed
+
+if TextToLocate="" then
+    goto PromptForText
+end
+
+Folder.GetFiles Folder: SelectedFolder  \
+                    FileFilter:'*' \
+                    IncludeSubfolders:True \
+                    FailOnAccessDenied:True \
+                    SortBy1:Folder.SortBy.NoSort \
+                    SortDescending1:False \
+                    SortBy2:Folder.SortBy.NoSort \
+                    SortDescending2:False \
+                    SortBy3:Folder.SortBy.NoSort \
+                    SortDescending3:False \
+                    Files=> AllFilesInFolder
+
+File.GetTempPath TempFile=> TempFile
+
+File.WriteText File: TempFile  \
+                    TextToWrite: 'The text '+TextToLocate+' has been found \
+                                   in the following files: ' \
+                    AppendNewLine:True \
+                    IfFileExists:File.IfFileExists.Overwrite \
+                    Encoding:File.FileEncoding.Unicode
+
+loop foreach item in AllFilesInFolder
+    File.ReadText File: item \
+                  Encoding:File.TextFileEncoding.UTF8 \
+                  Content=> CurrentFileContents
+
+    text.ParseForFirstOccurrence Text:CurrentFileContents  \
+                        TextToFind:TextToLocate  \
+                        StartingPosition: 0  \
+                        IgnoreCase:False \
+                        OccurrencePosition=> TextPosition
+    if TextPosition>-1 then
+        File.WriteText File:TempFile  \
+                        TextToWrite:item  \
+                        AppendNewLine:True \
+                        IfFileExists:File.IfFileExists.Append \
+                        Encoding:File.FileEncoding.Unicode
+    end
+end
+
+System.RunApplication ApplicationPath:'notepad'  \
+                    CommandLineArguments:TempFile \
+                    WorkingDirectory:'' \
+                    WindowStyle:System.ProcessWindowStyle.Normal \
+                    ProcessId=> AppProcessId
+
+
+Display.ShowMessage Title:'Process Completed!' \
+                    Message:'Process "Find Files containing specific Text" completed.' \
+                    Icon:Display.Icon.None \
+                    Buttons:Display.Buttons.OK \
+                    DefaultButton:Display.DefaultButton.Button1 \
+                    IsTopMost:False \
+                    ButtonPressed=> ButtonPressed

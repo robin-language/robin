@@ -1,0 +1,38 @@
+Display.SelectFolder Description:'Please select a folder to delete the empty files from. Press Cancel to exit.' \
+                    InitialDirectory:'' \
+                    IsTopMost:False \
+                    SelectedFolder=> SelectedFolder \
+                    ButtonPressed=> ButtonPressed
+
+if ButtonPressed='OK' then
+   
+    Folder.GetFiles Folder:SelectedFolder  \
+                    FileFilter:'*' \
+                    IncludeSubfolders:False \
+                    FailOnAccessDenied:True \
+                    SortBy1:Folder.SortBy.NoSort \
+                    SortDescending1:False \
+                    SortBy2:Folder.SortBy.NoSort \
+                    SortDescending2:False \
+                    SortBy3:Folder.SortBy.NoSort \
+                    SortDescending3:False Files=> AllFilesInFolder
+        
+    loop foreach item in AllFilesInFolder
+            
+        if item.size=0 then
+
+            File.Delete Files: item
+                
+        end
+        
+    end
+
+end
+
+Display.ShowMessage Title:'Process completed!' \
+                    Message:'Process "Find and Delete Empty Files" completed.' \
+                    Icon:Display.Icon.None \
+                    Buttons:Display.Buttons.OK \
+                    DefaultButton:Display.DefaultButton.Button1 \
+                    IsTopMost:False \
+                    ButtonPressed=> ButtonPressed

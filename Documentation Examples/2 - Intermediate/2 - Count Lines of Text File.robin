@@ -1,0 +1,27 @@
+Display.SelectFile Title:'Select the Text File' InitialDirectory:'' \
+                    FileFilter:'*.txt' \
+                    IsTopMost:False \
+                    CheckIfFileExists:True \
+                    SelectedFile=> SelectedTextFile \
+                    ButtonPressed=> ButtonPressed
+
+if ButtonPressed='Open' then
+    File.ReadTextAsList File: SelectedTextFile \
+                        Encoding:File.TextFileEncoding.UTF8 \
+                        Contents=> FileContents
+
+    Display.ShowMessage Title:'Results' \
+                        Message:'The file has '+FileContents.Count+ ' lines!' \
+                        Icon:Display.Icon.None \
+                        Buttons:Display.Buttons.OK \
+                        DefaultButton:Display.DefaultButton.Button1 \
+                        IsTopMost:False ButtonPressed=> ButtonPressed
+end
+
+Display.ShowMessage Title:'Process Completed!' \
+                    Message:'Process "Count Lines of Text File" completed.' \
+                    Icon:Display.Icon.None \
+                    Buttons:Display.Buttons.OK \
+                    DefaultButton:Display.DefaultButton.Button1 \
+                    IsTopMost:False \
+                    ButtonPressed=> ButtonPressed

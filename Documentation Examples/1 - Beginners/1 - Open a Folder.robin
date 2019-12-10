@@ -1,0 +1,16 @@
+Folder.GetSpecialFolder SpecialFolder:Folder.SpecialFolder.MyPictures \
+                        SpecialFolderPath=> SpecialFolderPath
+
+
+System.RunApplication ApplicationPath:'explorer'  \
+                    CommandLineArguments:SpecialFolderPath WorkingDirectory:'' \
+                    WindowStyle:System.ProcessWindowStyle.Normal \
+                    ProcessId=> ProcessId
+
+Display.ShowMessage Title:'Process Completed!' \
+                    Message:'Process "Open a Folder" completed.' \
+                    Icon:Display.Icon.None \
+                    Buttons:Display.Buttons.OK \
+                    DefaultButton:Display.DefaultButton.Button1 \
+                    IsTopMost:False \
+                    ButtonPressed=> ButtonPressed

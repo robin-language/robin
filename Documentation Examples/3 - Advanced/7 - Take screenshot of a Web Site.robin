@@ -1,0 +1,31 @@
+Folder.GetSpecialFolder SpecialFolder:Folder.SpecialFolder.DesktopDirectory \
+                        SpecialFolderPath=> DesktopDirectoryPath
+
+
+WebAutomation.LaunchChrome  Url: 'http://yahoo.com' \
+                            WindowState:WebAutomation.BrowserWindowState.Normal \
+                            ClearCache:False \
+                            ClearCookies:False \
+                            BrowserInstance=> Chrome
+
+WebAutomation.DataExtraction.TakeScreenshotSaveToFile BrowserInstance:Chrome \
+                                    File:DesktopDirectoryPath+'\ScreenShot.png' \
+                                    FileFormat:WebAutomation.FileFormat.Png
+
+WebAutomation.CloseWebBrowser BrowserInstance: Chrome
+
+File.RenameAddDateOrTime Files:DesktopDirectoryPath+'\ScreenShot.png'  \
+                        DateTimeToAdd:File.DateTimeToAdd.Current \
+                        DateTimePosition:File.AddTextPosition.AfterName \
+                        DateTimeSeparator:File.Separator.Space \
+                        DateTimeFormat:'yyyy-MM-dd@hh-mm' \
+                        IfFileExists:File.IfExists.DoNothing \
+                        RenamedFiles=> RenamedFiles
+
+Display.ShowMessage Title:'Screenshot taken' \
+                    Message:'The screenshot is stored in the file'+RenamedFiles[0] \
+                    Icon:Display.Icon.None \
+                    Buttons:Display.Buttons.OK \
+                    DefaultButton:Display.DefaultButton.Button1 \
+                    IsTopMost:False \
+                    ButtonPressed=> ButtonPressed2

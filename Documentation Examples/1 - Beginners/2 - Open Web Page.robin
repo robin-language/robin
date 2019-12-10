@@ -1,0 +1,23 @@
+Display.InputDialog Title:'Enter the URL.' \
+                    Message:'Please enter the URL of the webpage that you want to launch.' \
+                    DefaultValue:'' \
+                    InputType:Display.InputType.SingleLine \
+                    IsTopMost:False \
+                    UserInput=> WebPageToLaunch \
+                    ButtonPressed=> ButtonPressed
+
+if (ButtonPressed='OK')then
+    System.RunApplication ApplicationPath:'iexplore'  \
+                        CommandLineArguments:WebPageToLaunch \
+                        WorkingDirectory:'' \
+                        WindowStyle:System.ProcessWindowStyle.Normal \
+                        ProcessId=> ProcessId
+end
+
+Display.ShowMessage Title:'Process Completed!' \
+                    Message:'Process "Open Web Page" completed.' \
+                    Icon:Display.Icon.None \
+                    Buttons:Display.Buttons.OK \
+                    DefaultButton:Display.DefaultButton.Button1 \
+                    IsTopMost:False \
+                    ButtonPressed=> ButtonPressed
