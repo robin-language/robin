@@ -6,7 +6,7 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/) and this p
 
 ---
 
-## [0.9.2.5561] - 2019-12-11
+## [0.9.2.5567] - 2019-12-16
 
 ### Added Modules
 - **AWS**, connect to Amazon Web Services and automate a variety of tasks.
