@@ -6,6 +6,76 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/) and this p
 
 ---
 
+## [0.9.3.5631] - 2020-03-09
+
+### Added Modules
+- **Ancora**, connect to Ancora, upload documents and retrieve results.
+
+### Added Actions
+- Ancora.Connect
+- Ancora.GetBatchTypes
+- Ancora.UploadDocument
+- Ancora.IsBatchStateSuccessful
+- Ancora.GetCapturedData
+- Ancora.GetCapturedDataAndExportDocument
+
+### New Features
+- New Robin extension add-on for web automation (Google Chrome)
+- New Robin extension add-on for web automation (Mozilla Firefox)
+- Added ability to extend Robin through its SDK.
+- Added Visual Studio templates for VS2017/2019 for Robin extension (project and action templates).
+- Code snippets for if statements, switch, foreach, loop etc.
+- Autocomplete functionality for enums.
+
+### Modified
+- Updated installer to include Visual Studio templates
+- **Custom Modules** folder is now created in the Robin root folder during installation.
+- Multiline comments are now enabled by **/#** and end by **#/**.
+- When hitting Ctrl+Space for options preview, Modules are now presented before keywords in the editor.
+- Removed Cognitive.Microsoft.TextAnalytics.DetectLanguage action as it is deprecated and not supported by the API any longer.
+- In the editor Categories/Subcategories are now distinct from the Actions (followed by a dot).
+- Text.Parse action now returns a list of numeric values instead of a list of text values.
+- Filenames of Appmasks now allow for spaces.
+- Controls from imported appmasks cannot be saved to variables. The full path of the control must be utilized [appmask name].[app name].[screen name].[control name]
+
+### Fixed Bugs
+- Improved functionality of UIAutomation modules regarding Java apps.
+- Fixed error in retrieved JSON when utilizing Cognitive.Microsoft.Face.DetectFromSmile.
+- Fixed error in retrieved JSON when utilizing Cognitive.Microsoft.Face.DetectFromURL.
+- Fixed error handling when redundant 'end' keywords are included in Robin scripts. 
+- Fixed exception handling (InvokeCognitiveServiceError) for Cognitive.Google actions.
+- Fixed decryption of encrypted variables. Removed redundant square icons produced.
+- Fixed error handling for redundant **end** keywords.
+- Fixed Excel.ReadCell action's return type.
+- Text.Parse action now returns occurrence positions (list of numbers).
+- Text.RegexParse action now returns occurrence positions (list of numbers).
+- Fixed Module Loader initialization for proper folder identification.
+- Fixed MouseAndKeyboard.MoveMouse accuracy issues that occured randomly. 
+- Fixed escape character sequence for unified experience.
+- Fixed editor UI pop-ups that remained open on focus-lost.
+- Multiple calling of same functions is now enabled.
+- Fixed UIAutomation.GetWindow action random error occurance.
+- Fixed UIAutomation.GetWindowUseTimeout action random error occurance.
+- IfFileExists.Overwrite action now overwrites the file (used to append).
+- IfFileExists.Append action now appends to the file (used to overwrite).
+- Fixed File.WriteCSV and File.WriteCSVWithCustomSeparator actions (they appended text instead of overwriting).
+- Fixed File.WriteCSVWithCustomSeparator error throwing when the VariableToWrite argument was a list.
+- Fixed UIAutomation.Windows.Focus random error "Window not found".
+- Fixed UIAutomation.Click error throwing even when action was executed successfully.
+
+### Known Bugs
+- Scripts that utilize appsmask files have to either use the full path of the appmask otherwise the script file has to be closed and re-opened.
+- Robin scripts won't execute on Windows Server 2016.
+- Robin CLI stops working in Windows 32bit.
+- Exchange.RetrieveEmails is not working for Drafts Folder.
+- File.WriteCSV and File.WriteCSVWithCustomSeparator miss exception handling.
+- .handle property returns HNWD but can't be utilized to manipulate a window.
+- Running CommandLine.Read action doesn't return CmdOutput output.
+- Running CommandLine.ReadAndSplit action doesn't return CmdOutput output.
+- CaptureFast.Connect action is not throwing an error.
+
+---
+
 ## [0.9.2.5567] - 2019-12-16
 
 ### Added Modules
