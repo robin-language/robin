@@ -5,5 +5,5 @@
 *Source code coming soon...*
 
 - [Download](https://robin-language.org)    
-- [Getting Started](https://robin-language.org/docs/quickstart-tutorial-first-steps-in-robin)    
-- [Documentation](https://robin-language.org/docs)    
+- [Getting Started](https://docs.robin-language.org/quickstart-tutorial-first-steps-in-robin/)    
+- [Documentation](https://docs.robin-language.org/)    
